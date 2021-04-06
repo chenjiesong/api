@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="share.api.mapper.StockMapper">
+
+    <select id="queryUserStockByUid" parameterType="Integer" resultType="share.api.model.UserStock">
+        select * from user_stock where uid = #{uid}
+    </select>
+
+    <select id="queryCountUserStockByUid" parameterType="Integer" resultType="Integer">
+        select count(*) from user_stock where uid = #{uid}
+    </select>
+
+    <select id="queryStockTop" parameterType="String" resultType="share.api.model.StockReal">
+        select * from stock_real   order by changepercent desc limit 0,5;
+    </select>
+
+    <select id="queryStockBot" parameterType="String" resultType="share.api.model.StockReal">
+        select * from stock_real   order by changepercent limit 0,5;
+    </select>
+
+    <select id="queryStockPb" parameterType="String" resultType="share.api.model.StockReal">
+        select * from stock_real   order by pb desc limit 0,5;
+    </select>
+
+    <select id="queryStockTurnover" parameterType="String" resultType="share.api.model.StockReal">
+        select * from stock_real   order by turnoverratio desc limit 0,5;
+    </select>
+
+    <select id="queryStockVolume" parameterType="String" resultType="share.api.model.StockReal">
+        select * from stock_real   order by volume desc limit 0,5;
+    </select>
+
+    <select id="queryStockByCode" parameterType="String" resultType="share.api.model.StockReal">
+        select * from stock_real where code like CONCAT('%',#{code},'%') limit 0,5;
+    </select>
+
+    <select id="queryStockByName" parameterType="String" resultType="share.api.model.StockReal">
+        select * from stock_real where name like CONCAT('%',#{name},'%') limit 0,5;
+    </select>
+
+</mapper>

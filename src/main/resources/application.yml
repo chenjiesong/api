@@ -1,0 +1,58 @@
+server:
+  port: 8008
+  servlet:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  tomcat:
+    uri-encoding: UTF-8
+
+
+person:
+  name: Steven
+  age: 20
+  address: 北京
+
+spring:
+  datasource:
+    username: root
+    password: AS518101DF
+    # serverTimezone=Asia/Shanghai 这样解决时区的报错会好一些
+    url: jdbc:mysql://localhost:3306/share?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 自定义数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #druid 数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    #配置监控统计拦截的filters
+    #stat:监控统计、log4j：日志记录、wall：防御sql注入
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+
+  mybatis:
+    mapper-locations: classpath:mapper/*Mapper.xml
+    type-aliases-package: share.api.model
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+
+
+

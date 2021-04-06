@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--suppress ThymeleafVariablesResolveInspection-->
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <script th:src="@{/js/test.js}"></script>
+    <link th:href="@{/css/test.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/my-page.css}">
+    <script src="https://kit.fontawesome.com/f26c5fd7c8.js" crossorigin="anonymous"></script>
+    <script th:src="@{/js/my-page.js}"></script>
+    <script th:src="@{/js/my-select.js}"></script>
+    <script th:src="@{/js/my-recent.js}"></script>
+    <script th:src="@{/js/stock-index.js}"></script>
+    <script th:src="@{/js/date-format.js}"></script>
+    <script th:src="@{/js/stock-rank.js}"></script>
+    <script th:src="@{/js/stock-search.js}"></script>
+    <script th:src="@{/js/stock-hot.js}"></script>
+</head>
+
+<body onload="onLoad()">
+<nav role='navigation'>
+        <ul>
+            <li><a href="#"><i class="fas fa-home"></i>&nbsp首页</a></li>
+            <li><a href="#"><i class="fas fa-eject"></i>&nbsp关于</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i>&nbsp联系我们</a></li>
+        </ul>
+        <ul class="nav-right">
+            <li sec:authorize="isAuthenticated()">
+                <a><i class="fas fa-user"></i>&nbsp用户名：<span id="username" sec:authentication="principal.username"></span></a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i>&nbsp注销</a>
+            </li>
+            <li  sec:authorize="!isAuthenticated()">
+                <a th:href="@{/LoginPage}"><i class="fas fa-sign-in-alt"></i>&nbsp登录</a>
+            </li>
+        </ul>
+        <ul >
+            <div id = "search_area">
+                <div class="search">
+                <select  id="search_select" class="searchTerm">
+                    <option id="code_option" value="code">代码</option>
+                    <option id="name_option" value="name">名称</option>
+                </select>
+                <input id="nav_search" type="text" class="searchTerm" placeholder="查找股票" onfocus="this.placeholder=' ' "
+                       onblur=" this.placeholder='查找股票' ">
+                <button type="submit" class="searchButton" style="float: right">
+                    <i class="fa fa-search"></i>
+                </button>
+                </div>
+                <div hidden class="nav_search_detail">
+                </div>
+            </div>
+        </ul>
+</nav>
+
+<div class="box">
+    <div class="stock_index">
+        <h1><i class="fas fa-chart-line" style="color:red;margin-bottom: -20%"></i>&nbsp行情指数</h1>
+        <div class="indexHead" >
+            <div class="indexTab">
+                <ul class="indexNav">
+                    <li class="indexactive0">
+                        <a class="indexbutton0" href="#1" data-toggle="tab">&nbsp上证综指</a>
+                    </li>
+                    <li class="indexactive1"><a class="indexbutton1" href="#2" data-toggle="tab">&nbsp深证成指</a>
+                    </li>
+                    <li class="indexactive2">
+                        <a class="indexbutton2" href="#1" data-toggle="tab">&nbsp沪深300</a>
+                    </li>
+                    <li class="indexactive3"><a class="indexbutton3" href="#2" data-toggle="tab">&nbsp大数据100</a>
+                    </li>
+                    <li class="indexactive4">
+                        <a class="indexbutton4" href="#1" data-toggle="tab">&nbsp创业扳指</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="stock_index0" class="indexBox"></div>
+        <div id="stock_index1" class="indexBox"></div>
+        <div id="stock_index2" class="indexBox"></div>
+        <div id="stock_index3" class="indexBox"></div>
+        <div id="stock_index4" class="indexBox"></div>
+    </div>
+
+    <div class="stock_rank">
+        <h1><i class="fas fa-chart-line" style="color:red;margin-bottom: -20%"></i>&nbsp个股行情</h1>
+        <div class="rankHead" >
+            <div class="rankTab">
+                <ul class="rankNav">
+                    <li class="rankactive0">
+                        <a class="rankbutton0" href="#1" data-toggle="tab">&nbsp涨幅率</a>
+                    </li>
+                    <li class="rankactive1"><a class="rankbutton1" href="#2" data-toggle="tab">&nbsp跌幅率</a>
+                    </li>
+                    <li class="rankactive2"><a class="rankbutton2" href="#2" data-toggle="tab">&nbsp市净率</a>
+                    </li>
+                    <li class="rankactive3"><a class="rankbutton3" href="#2" data-toggle="tab">&nbsp换手率</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="stock_top">
+            <div id="rank_index0" class="topBox"></div>
+            <div id="rank_index1" class="topBox" > </div>
+            <div id="rank_index2" class="topBox" > </div>
+            <div id="rank_index3" class="topBox" > </div>
+        </div>
+
+    </div>
+
+    <div class="stock_select" sec:authorize="isAuthenticated()">
+        <h1><i class="fas fa-chart-line" style="color:red;margin-bottom: -20%"></i>&nbsp排行榜</h1>
+        <p id="select_flash_time" style="font-size: 3px;margin-top:6%;float: right" ></p>
+        <div class="selectHead" >
+            <div class="selectTab">
+                <ul class="selectNav">
+                    <li class="selectactive1">
+                        <a class="selectbutton1" href="#1" data-toggle="tab"><i class="fas fa-file-contract" style="color: Dodgerblue;font-size: 20px;font-weight: bold"></i>&nbsp自选股</a>
+                    </li>
+                    <li class="selectactive2"><a class="selectbutton2" href="#2" data-toggle="tab"><i class="fas fa-clock" style="color: lightseagreen;font-size: 20px;font-weight: bold"></i>&nbsp最近访问</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="selectBox" >
+            <div id="select" ></div>
+            <div class="select_page" style="text-align: center;">
+                <div class="my-page"></div>
+            </div>
+        </div>
+
+        <div class="recentBox" >
+            <div id="recent" ></div>
+        </div>
+
+    </div>
+
+    <div class="stock_hot">
+        <h1><i class="fas fa-chart-line" style="color:red;margin-bottom: -20%"></i>&nbsp热门股票</h1>
+        <div class="hotHead" >
+            <div class="hotTab">
+                <ul class="hotNav">
+                    <li class="hotactive0">
+                        <a class="hotbutton0" href="#1" data-toggle="tab">&nbsp成交量</a>
+                    </li>
+                    <li class="hotactive1"><a class="rankbutton1" href="#2" data-toggle="tab">&nbsp讨论度</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="stock_top">
+            <div id="stock_hot_volume" class="topBox"></div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
